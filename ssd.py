@@ -72,7 +72,7 @@ class SSD(nn.Module):
 
         # apply vgg up to conv4_3 relu
         for k in range(23):
-            x = self.vgg[k](x)
+            x = self.vgg[k](x.float())
 
         s = self.L2Norm(x)
         sources.append(s)

@@ -3,7 +3,7 @@ import os.path
 
 # gets home dir cross platform
 # HOME = os.path.expanduser("~")
-HOME = '/content/ssd.pytorch/'
+HOME = '/home/yellow/ssd.pytorch/'
 
 # for making bounding boxes pretty
 COLORS = ((255, 0, 0, 128), (0, 255, 0, 128), (0, 0, 255, 128),
@@ -43,7 +43,7 @@ coco = {
 }
 
 SubT = {
-    'num_classes': 6,
+    'num_classes': 3,
     'lr_steps': (4000, 8000, 12000),
     'max_iter': 7500,
     'feature_maps': [38, 19, 10, 5, 3, 1],
