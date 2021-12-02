@@ -5,6 +5,7 @@ https://github.com/fmassa/vision/blob/voc_dataset/torchvision/datasets/voc.py
 
 Updated by: Ellis Brown, Max deGroot
 """
+import random
 import json
 from .config import HOME
 import os.path as osp
@@ -128,8 +129,12 @@ class BigCatAnnotationTransform(object):
 		ymin = min(target["shapes"][0]['points'][0][0], target["shapes"][0]['points'][1][0])
 		xmax = max(target["shapes"][0]['points'][0][1], target["shapes"][0]['points'][1][1])
 		ymax= max(target["shapes"][0]['points'][0][0], target["shapes"][0]['points'][1][0])
-		label_ind = 0 if target["shapes"][0]['label']=="lion" else 1
-		res += [xmin/height, ymin/width, xmax/height, ymax/width, label_ind]
+		if target["shapes"][0]['label']=="lion" : label_ind = 0
+		elif target["shapes"][0]['label']=="tiger" : label_ind = 1
+		else :
+			label_ind = random.random()%2
+			print("why else????????????????????")
+		res += [ymin/width, xmin/height, ymax/width, xmax/height, label_ind]
 
 		return [res]  # [[xmin, ymin, xmax, ymax, label_ind], ... ]
 
@@ -196,10 +201,10 @@ class SUBTDetection(data.Dataset):
 			target = np.array(target)
 			img, boxes, labels = self.transform(resized_img, target[: , :4], target[: , 4])
 
-		# to rgb
-		resized_img = resized_img[:, :, (2, 1, 0)]
-		target = np.hstack((boxes, np.expand_dims(labels, axis=1)))
-		return torch.from_numpy(resized_img).permute(2, 0, 1), target, height, width
+			# to rgb
+			img = img[:, :, (2, 1, 0)]
+			target = np.hstack((boxes, np.expand_dims(labels, axis=1)))
+		return torch.from_numpy(img).permute(2, 0, 1), target, height, width
 
 	def pull_image(self, index):
 		'''Returns the original image object at index in PIL form

@@ -18,23 +18,23 @@ import matplotlib.pyplot as plt
 import torchvision
 import random
 import os.path as osp
-
+import matplotlib.pyplot as plt
 
 DATASET_ROOT = "mydata/big_cat"
 DATASET_NAME = "/mydata"
 cfg = SubT
 BASE_NET = "weight/vgg16_reducedfc.pth"
 DATA_DETECTION = SUBTDetection
-BATCH_SIZE = 10
+BATCH_SIZE = 4#10
 PRETRAINED_MODEL = None
 PRETRAINED_ITER = 0
 SAVE_MODEL_ITER = 500
 START_ITER = 0
 NUM_WORKERS = 4
 CUDA = True
-LR = 1e-3
+LR = 1e-4#1e-3
 MOMENTUM = 0.4
-WEIGHT_DECAY = 5e-4
+WEIGHT_DECAY = 5e-3#5e-4
 GAMMA = 0.1
 VISDOM = False
 SAVE_FOLDER = "weight/" + DATASET_NAME +"/"
@@ -117,7 +117,7 @@ optimizer = optim.SGD(net.parameters(), lr=LR, momentum=MOMENTUM,
 # print(cfg['min_dim'])
 criterion = MultiBoxLoss(BATCH_SIZE ,cfg['num_classes'], 0.5, True, 0, True, 3, 0.5,False, CUDA)
 
-
+loss_list = []
 
 
 net.train()
@@ -169,9 +169,16 @@ for iteration in range(START_ITER, cfg['max_iter']):
     loc_loss += loss_l.item()
     conf_loss += loss_c.item()
 
+    loss_list.append(loss.item())
+
     if iteration % 10 == 0:
             print('timer: %.4f sec.' % (t1 - t0))
             print('iter ' + repr(PRETRAINED_ITER + iteration) + ' || Loss: %.4f ||' % (loss.item()), end='')
+            plt.plot(loss_list)
+            plt.xlabel('iteration')
+            plt.ylabel('loss')
+            plt.title('SSD Traning Loss')
+            plt.savefig("loss.png")
 
     if iteration != 0 and iteration % SAVE_MODEL_ITER == 0:
             print('Saving state, iter:', iteration)

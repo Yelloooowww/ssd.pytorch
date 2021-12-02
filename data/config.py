@@ -45,7 +45,7 @@ coco = {
 SubT = {
     'num_classes': 3,
     'lr_steps': (4000, 8000, 12000),
-    'max_iter': 7500,
+    'max_iter': 100000,
     'feature_maps': [38, 19, 10, 5, 3, 1],
     'min_dim': 300,
     'steps': [8, 16, 32, 64, 100, 300],
